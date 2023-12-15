@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{{ .Name }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+        :root {
+            --font-clr: #45291c;
+            --submit-clr: #613b29;
+            --bg-color: #e1c5ad;
+            --border-color: #e7e2df;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+        }
+
+        input, button, a > * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--font-clr);
+            color: var(--font-clr);
+            text-align: center;
+            max-width: 600px;
+            margin: 8vh auto;
+            padding: 2rem;
+        }
+
+        .rating-wrapper, .add-to-cart {
+            border-top: 2px solid #45291c84;
+            padding-top: 1rem;
+        }
+
+        img {
+            width: 100%;
+            object-fit: contain;
+        }
+
+        input {
+            font-size: 1rem;
+            padding: 3px;
+            display: block;
+            margin: 1rem auto;
+        }
+
+        .btns-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btns-wrapper > * {
+            width: 5rem;
+        }
+
+        button {
+            background-color: var(--submit-clr);
+            border: none;
+            color: white;
+            padding: 4px 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-prop">
+            <h1>{{ .Name }}</h1>
+            <div>Цена: {{ .Price }}</div>
+            <div>Описание: {{ .Description }}</div>
+            <div>Рейтинг: {{.Rating}}</div>
+        </div>    
+        <div class="img-wrapper">
+            <img src="{{.ImageURL}}">
+        </div>
+        <div class="rating-wrapper">
+            <form id="rating-form" class="btns-wrapper">
+                <label for="rating">Рейтинг:</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" required>
+                <button type="submit">Изменить</button>
+            </form>
+        </div>
+        <div id="message"></div>
+        <div class="add-to-cart">
+            <form id="add-to-cart-form" class="btns-wrapper">
+                <label for="quantity">Количество:</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                <button type="submit">Добавить в корзину</button>
+            </form>
+        </div>
+    </div>
+	<script>
+		const form = document.querySelector('#rating-form');
+		const message = document.querySelector('#message');
+		const addToCartForm = document.querySelector('#add-to-cart-form');
+		const productId = window.location.pathname.split('/')[2];
+        
+		form.addEventListener('submit', async(e) => {
+			e.preventDefault();
+			const formData = new FormData(e.target);
+            const formDataJson = JSON.stringify(Object.fromEntries(formData));
+	
+            const response = await fetch(`/products/${productId}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: formDataJson
+            });
+
+            if (response.ok) {
+                message.textContent = 'Рейтинг успешно изменен!';
+				window.location.href = `/products/${productId}`;
+
+            } else {
+                message.textContent = 'Ошибка при изменении рейтинга.';
+            }
+		});
+
+		addToCartForm.addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const productId = window.location.pathname.split('/')[2];
+			const user = localStorage.getItem('currentUserid')
+
+            const formData = new FormData(e.target);
+            const formDataJson = JSON.stringify(Object.fromEntries(formData));
+
+            const response = await fetch(`/cart/${user}/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: formDataJson
+            });
+
+            if (response.ok) {
+                alert('Товар успешно добавлен в корзину!');
+				window.location.href = `/cart/${user}`;
+            } else {
+                alert('Ошибка при добавлении товара в корзину.');
+            }
+        });
+	</script>
+    
+
+</body>
+</html>

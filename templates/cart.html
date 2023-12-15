@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Корзина</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e1c5ad;
+            color: #45291c;
+        }
+
+        input, button, a > * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .orders-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .btn-primary {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container orders-wrapper">
+	<h2>Корзина</h2>
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Фото</th>
+						<th>Имя продукта</th>
+						<th>Цена</th>
+						<th>Количество</th>
+						<th>Итого</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{{range .}}
+                    <p id="cart-id" style="display: none;">{{.CartID}}</p>
+                    <tr data-productid="{{.Product.ID}}">
+						<td><img src="{{.Product.ImageURL}}" alt="{{.Product.Name}}" style="height: 50px;"></td>
+						<td>{{.Product.Name}}</td>
+						<td>{{.Product.Price}}</td>
+						<td>{{.Quantity}}</td>
+						<td></td>
+						<td>
+							<button type="button" class="btn btn-danger btn-sm btn-delete">Удалить</button>
+							<button type="button" class="btn btn-warning btn-sm btn-reduce">-</button>
+                            <button type="button" class="btn btn-success btn-sm btn-increase">+</button>
+						</td>
+					</tr>
+					{{end}}
+				</tbody>
+                <tfoot>
+                    <tr>
+                      <td colspan="4"><strong>Итого:</strong></td>
+                      <td><strong></strong></td>
+                      <td><strong id="total-price"></strong></td>
+                    </tr>
+                  </tfoot>                  
+			</table>
+			<button id="order-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#order-modal">Заказать</button>
+            <div id="message"></div>             
+		</div>
+	</div>
+    <form id="order-form" style="display: none;">
+        <div class="mb-3">
+          <label for="delivery-method" class="form-label">Выберите метод доставки:</label>
+          <select class="form-select" id="delivery-method" name="delivery-method">
+            <option value="courier">Курьерская доставка</option>
+            <option value="pickup">Самовывоз</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="phone-number" class="form-label">Введите номер телефона:</label>
+          <input type="text" class="form-control" id="phone-number" name="phone-number" required>
+        </div>
+        <div class="mb-3">
+          <label for="address">Введите адрес доставки:</label>
+          <input type="text" class="form-control" id="address" name="address">
+        </div>
+        <button type="submit" form="order-form" class="btn btn-primary">Оформить заказ</button>
+    </form>
+
+</div>
+
+</body>
+<script>
+    const orderButton = document.getElementById('order-button');
+    const orderForm = document.querySelector('#order-form');
+
+    orderButton.addEventListener('click', function() {
+        orderForm.style.display = 'block';
+    });
+    const message = document.querySelector("#message");
+    function updateTotalPrice() {
+      const rows = document.querySelectorAll("table tbody tr");
+      let total = 0;
+  
+      rows.forEach((row) => {
+        const price = row.querySelector("td:nth-of-type(3)").innerText;
+        const quantity = row.querySelector("td:nth-of-type(4)").innerText;
+        const totalPrice = price * quantity;
+        row.querySelector("td:nth-of-type(5)").innerText = totalPrice;
+        total += totalPrice;
+      });
+  
+      const totalElem = document.querySelector("#total-price");
+      totalElem.innerText = total;
+    }
+  
+    updateTotalPrice();
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", updateTotalPrice);
+    });
+    const userId = localStorage.getItem('currentUserid');
+
+    document.querySelectorAll(".btn-increase, .btn-reduce").forEach((button) => {
+        button.addEventListener("click", async (e) => {
+            const tr = button.closest("tr");
+            const productId = tr.dataset.productid;
+            const quantityElem = tr.querySelector("td:nth-of-type(4)");
+            let quantity = parseInt(quantityElem.innerText);
+            if (button.classList.contains("btn-increase")) {
+                quantity++;
+            } else {
+                quantity = quantity > 1 ? quantity - 1 : 1;
+            }
+            const q = JSON.stringify({quantity: quantity});
+
+            const response = await fetch(`/cart/${userId}/${productId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({quantity: quantity}),
+            });
+
+            if (response.ok) {
+                quantityElem.innerText = quantity;
+                updateTotalPrice();
+            } else {
+                message.textContent = "Ошибка при изменении количества.";
+            }
+        });
+    });
+
+    document.querySelectorAll(".btn-delete").forEach((button) => {
+        button.addEventListener("click", async (e) => {
+            const tr = button.closest("tr");
+            const productId = tr.dataset.productid;
+
+            const response = await fetch(`/cart/${userId}/${productId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.ok) {
+                tr.remove();
+                updateTotalPrice();
+            } else {
+                message.textContent = "Ошибка при удалении товара из корзины.";
+            }
+        });
+    });
+
+    document.getElementById("order-form").addEventListener("submit", async(event) => {
+    event.preventDefault();
+    const deliveryMethod = document.getElementById("delivery-method").value;
+    const phoneNumber = document.getElementById("phone-number").value;
+    const address = document.getElementById("address").value;
+    const totalPrice = document.querySelector("#total-price").innerText;
+
+    const response = await fetch("/orders", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            UserID: userId,
+            DeliveryMethod: deliveryMethod,
+            PhoneNumber: phoneNumber,
+            Address: address,
+            Cost: totalPrice
+        })
+    })
+    if (response.ok) {
+        window.location.href = `/orders/${userId}`
+    } else {
+        message.textContent = "Ошибка при оформлении заказа";
+    }
+    });
+
+
+  </script>
+  
+</html>

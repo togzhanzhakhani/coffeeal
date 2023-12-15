@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Orders</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">  
+  <style>
+    body {
+      background-color: #e1c5ad;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .container h1 {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Orders</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Delivery Method</th>
+          <th>Phone Number</th>
+          <th>Address</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .}}
+        <tr>
+          <td>{{.DeliveryMethod}}</td>
+          <td>{{.PhoneNumber}}</td>
+          <td>{{.Address}}</td>
+          <td>{{.Cost}}</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

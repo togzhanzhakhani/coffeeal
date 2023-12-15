@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Список товаров</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+		:root {
+			--font-clr: #45291c;
+			--submit-clr: #613b29;
+			--bg-color: #e1c5ad;
+			--border-color: #e7e2df;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			background-color: var(--bg-color);
+		}
+
+		input, button, a > * {
+			font-family: 'Roboto', sans-serif;
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			font-family: 'Montserrat', sans-serif;
+		}
+
+		a {
+			text-decoration: none;
+			color: unset;
+		}
+
+		.container {
+			max-width: 1200px;
+			padding: 2rem;
+			margin: 0 auto;
+			background-color: #fff;
+		}
+
+		.menu-wrapper {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			color: var(--font-clr);
+		}
+
+		.menu-wrapper h1, .footer {
+			text-align: center;
+		}
+
+		.menu-wrapper form {
+			display: flex;
+			justify-content: end;
+			gap: .5rem;
+			font-size: 1.2rem;
+		}
+
+		.menu-wrapper form > input {
+			font-size: 1rem;
+			max-width: 7rem;
+		}
+
+		input[type="submit"] {
+			color: var(--font-clr);
+			border: 1px solid;
+			cursor: pointer;
+			padding-inline: .5rem;
+		}
+
+		.menu-products-wrapper {
+			display: flex;
+			justify-content: start;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		.menu-item-wrapper {
+			flex: 1;
+			border: 1px solid var(--border-color);
+			padding: 0 1rem 1.5rem;
+		}
+
+		.__item-name-price-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: start;
+		}
+
+		img {
+			display: block;
+		}
+
+		.__item-img-wrapper img {
+			height: 40vh;
+			margin: 0 auto;
+		}
+
+		.__item-name {
+			font-size: 1.2em;
+			max-width: 10ch;
+		}
+
+		.__item-price {
+			font-weight: bold;
+		}
+
+		.footer {
+			font-size: 1rem;
+			margin-top: 20vh;
+		}
+
+		#edit-link {
+			color: blueviolet;
+		}
+
+		#edit-link:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="menu-wrapper">
+			<h1>Список товаров</h1>
+			<form>
+				<label for="price-min-filter">Минимальная цена:</label>
+				<input type="number" id="price-min-filter" name="priceMin" value="{{.PriceMin}}">
+				<label for="price-max-filter">Максимальная цена:</label>
+				<input type="number" id="price-max-filter" name="priceMax" value="{{.PriceMax}}">
+				<input type="submit" value="Применить">
+			</form>
+			<div class="menu-products-wrapper">
+				{{ range .Products }}
+				<a class="menu-item-wrapper" href="/products/{{ .ID }}">
+					<div class="__item-img-wrapper">
+						<img src="{{ .ImageURL }}" alt="{{ .Name }}">
+					</div>
+					<div class="__item-name-price-wrapper">
+						<div class="__item-name">
+							{{ .Name }}
+						</div>
+						<div class="__item-price">
+							{{ .Price }}
+						</div>
+					</div>
+				</a>
+				{{ end }}
+			</div>
+		</div>
+	</div>
+	<script>
+		const currentUserid = localStorage.getItem('currentUserid');
+  
+		if (currentUserid == null) {
+		  window.location.href = '/login';
+		}
+	  </script>
+</body>
+</html>

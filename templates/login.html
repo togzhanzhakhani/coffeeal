@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Form</title>  
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap");
+
+        :root {
+            --font-clr: #45291c;
+            --submit-clr: #613b29;
+            --bg-color: #f0e7dd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        input,
+        button,
+        a > * {
+            font-family: "Roboto", sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        input {
+            margin-top: 0.5em;
+            font-size: 1rem;
+            padding: 7px 7px;
+            border: 1px solid #ded6d2;
+        }
+
+        input[type="submit"] {
+            background-color: var(--submit-clr);
+            color: #fff;
+            border: 2px solid #613b29;
+            cursor: pointer;
+        }
+
+        input.form {
+            min-width: 30rem;
+        }
+
+        body {
+            background-color: #e1c5ad;
+        }
+
+        .login-form {
+            width: max-content;
+            margin: 20vh auto;
+            background-color: #fff;
+            padding: 2rem;
+            color: var(--font-clr);
+            font-size: 1.2rem;
+        }
+
+        .login-form h1 {
+            margin-bottom: 1rem;
+        }
+
+        .login-form .register {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h1>Login</h1>
+        <form method="post">
+            <div>
+                <label for="Email">Email:</label><br>
+                <input type="email" id="Email" name="Email" class="form"><br>
+            </div>
+            <div>
+                <label for="Password">Password:</label><br>
+                <input type="password" id="Password" name="Password" class="form"><br>
+            </div>
+            <div>
+                <input type="submit" value="Login">
+            </div>
+        </form>
+        <div class="register">
+            Don't have an account?
+            <a id="reg-link" href="/register">Register</a>
+        </div>
+    </div>
+    <script>
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const formDataJson = JSON.stringify(Object.fromEntries(formData));
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: formDataJson
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+                localStorage.setItem('currentUserid', user.ID);
+                window.location.href = '/user';
+            } else {
+                alert('Неверное имя пользователя или пароль');
+                console.log(await response.text());
+            }
+        });
+
+      </script>
+      
+</body>
+</html>
+

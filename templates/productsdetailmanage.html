@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <style>
+		@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+        :root {
+            --font-clr: #45291c;
+            --submit-clr: #613b29;
+            --bg-color: #e1c5ad;
+            --border-color: #e7e2df;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+        }
+
+        label, input, button, a > * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 10vh auto;
+            padding: 2rem;
+            border: 2px solid var(--font-clr);
+        }
+
+        div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form {
+            max-width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .btns-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            column-gap: 1rem;
+        }
+
+        input, textarea {
+            font-size: 1rem;
+            padding: 4px 6px;
+            font-family: 'Roboto';  
+        }
+        
+        input[type="submit"], button {
+            font-size: .8rem;
+			color: white;
+            background-color: var(--submit-clr);
+			border: none;
+			cursor: pointer;
+			padding: .5rem 1rem;
+		}
+
+        button {
+            background-color: tomato;
+        }
+    </style>
+</head>
+<body>
+    <section class="container">
+        <form method="post" action="{{.ID}}" id="edit">
+            <h1>Edit Product</h1>
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{.Name}}">
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description">{{.Description}}</textarea>
+            </div>
+            <div>
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" value="{{.Price}}">
+            </div>
+            <div>
+                <label for="image_url">Image URL:</label>
+                <input type="text" id="image_url" name="image_url" value="{{.ImageURL}}">
+            </div>
+            <div class="btns-wrapper">
+                <input type="submit" value="Save">
+                <button onclick="confirmDelete()">Delete</button>
+            </div>
+        </form>
+    </section>
+    <script>
+		const currentUserid = localStorage.getItem('currentUserid');
+
+		const editform = document.querySelector('#edit');
+        var id = editform.getAttribute("action");
+  
+		if (currentUserid == null) {
+		  window.location.href = '/login';
+		}
+  
+        editform.action = `/products/manage/${currentUserid}/${id}`;
+
+        function confirmDelete() {
+			if (confirm("Are you sure you want to delete your profile?")) {
+				fetch(`/products/manage/${currentUserid}/${id}`, { method: "DELETE" })
+                .then(() => window.location.href = `/products/manage/${currentUserid}`)
+                .catch(error => console.error("Error deleting product:", error))
+			}
+		}
+	  </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>User Page</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+      :root {
+          --font-clr: #342014;
+          --bg-btn: #54280e;
+          --bg-color: #f0e7dd;
+      }
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      body {
+          background-color: var(--bg-color);
+      }
+
+      input, button, p, a > * {
+          font-family: 'Roboto', sans-serif;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+          font-family: 'Montserrat', sans-serif;
+      }
+
+      button {
+          background: none;
+          border: none;
+          color: white;
+          padding: inherit;
+          cursor: pointer;
+          transition: all .2s ease;
+      }
+
+      .btn {
+          padding-inline: .5rem;
+          padding-block: .3rem;
+          cursor: pointer;
+          background-color: var(--bg-btn);
+          border: none;
+          color: #fff;
+          border-radius: 3px;
+          transition: all .2s ease;
+      }
+
+      .btn:hover, button:hover {
+          background-color: #5d3b1a;
+      }
+
+      header {
+          height: 5rem;
+          padding: 2rem 3rem;
+          background-color: var(--font-clr);
+          color: #fff;    
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+
+      .logo-wrapper {
+          display: flex;
+          align-items: center;
+          color: var(--bg-color);
+          gap: .5rem;
+      }
+
+      .btns-wrapper {
+          display: flex;
+          gap: 1rem;
+      }
+
+      .cart-wrapper {
+          display: flex;
+          align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo-wrapper">
+        <img src="https://www.freepnglogos.com/uploads/coffee-logo-png/estella-revenge-stuff-week-coffee-confections-1.png" alt="Logo" width="80px">
+        <h1>Coffee Shop</h1>
+      </div>
+      <div class="btns-wrapper">
+        <div class="cart-wrapper btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3043 2.75 17.863 2.75C18.4217 2.75 18.8923 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.571 21.275 6.113C21.2917 6.655 21.1083 7.11733 20.725 7.5L19.3 8.925ZM17.85 10.4L7.25 21H3V16.75L13.6 6.15L17.85 10.4Z" fill="white"/>
+          </svg>
+          <button onclick="window.location.href=`/user/${currentUserid}`">Редактировать профиль</button>
+        </div>
+        <div class="cart-wrapper btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 22C6.45 22 5.979 21.804 5.587 21.412C5.195 21.02 4.99933 20.5493 5 20C5 19.45 5.196 18.979 5.588 18.587C5.98 18.195 6.45067 17.9993 7 18C7.55 18 8.021 18.196 8.413 18.588C8.805 18.98 9.00067 19.4507 9 20C9 20.55 8.804 21.021 8.412 21.413C8.02 21.805 7.54933 22.0007 7 22ZM17 22C16.45 22 15.979 21.804 15.587 21.412C15.195 21.02 14.9993 20.5493 15 20C15 19.45 15.196 18.979 15.588 18.587C15.98 18.195 16.4507 17.9993 17 18C17.55 18 18.021 18.196 18.413 18.588C18.805 18.98 19.0007 19.4507 19 20C19 20.55 18.804 21.021 18.412 21.413C18.02 21.805 17.5493 22.0007 17 22ZM6.15 6L8.55 11H15.55L18.3 6H6.15ZM7 17C6.25 17 5.68333 16.6707 5.3 16.012C4.91667 15.3533 4.9 14.6993 5.25 14.05L6.6 11.6L3 4H1.975C1.69167 4 1.45833 3.904 1.275 3.712C1.09167 3.52 1 3.28267 1 3C1 2.71667 1.096 2.479 1.288 2.287C1.48 2.095 1.71733 1.99934 2 2H3.625C3.80833 2 3.98333 2.05 4.15 2.15C4.31667 2.25 4.44167 2.39167 4.525 2.575L5.2 4H19.95C20.4 4 20.7083 4.16667 20.875 4.5C21.0417 4.83334 21.0333 5.18334 20.85 5.55L17.3 11.95C17.1167 12.2833 16.875 12.5417 16.575 12.725C16.275 12.9083 15.9333 13 15.55 13H8.1L7 15H18.025C18.3083 15 18.5417 15.096 18.725 15.288C18.9083 15.48 19 15.7173 19 16C19 16.2833 18.904 16.521 18.712 16.713C18.52 16.905 18.2827 17.0007 18 17H7Z" fill="white"/>
+          </svg>
+          <button onclick="window.location.href=`/cart/${currentUserid}`">Корзина</button>
+        </div>
+        <div class="cart-wrapper btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m17.275 20.25l3.475-3.45l-1.05-1.05l-2.425 2.375l-.975-.975l-1.05 1.075l2.025 2.025ZM6 9h12V7H6v2Zm12 14q-2.075 0-3.538-1.463T13 18q0-2.075 1.463-3.538T18 13q2.075 0 3.538 1.463T23 18q0 2.075-1.463 3.538T18 23ZM3 22V5q0-.825.588-1.413T5 3h14q.825 0 1.413.588T21 5v6.675q-.7-.35-1.463-.513T18 11H6v2h7.1q-.425.425-.787.925T11.675 15H6v2h5.075q-.05.25-.063.488T11 18q0 1.05.288 2.013t.862 1.837L12 22l-1.5-1.5L9 22l-1.5-1.5L6 22l-1.5-1.5L3 22Z"/></svg>
+          <button onclick="window.location.href=`/orders/${currentUserid}`">Заказы</button>
+        </div>
+        <div class="cart-wrapper btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M17 11.6V15a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6v-3.4a.6.6 0 0 1 .6-.6h12.8a.6.6 0 0 1 .6.6ZM12 9c0-1 .714-2 2.143-2v0A2.857 2.857 0 0 0 17 4.143V3.5M8 9v-.5a3 3 0 0 1 3-3v0a2 2 0 0 0 2-2V3"/><path d="M16 11h2.5a2.5 2.5 0 0 1 0 5H17"/></g></svg>
+          <button onclick="window.location.href='/products'">Продукты</button>
+        </div>
+        <div class="cart-wrapper btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" d="M16.95 2.58a4.985 4.985 0 0 1 0 7.07c-1.51 1.51-3.75 1.84-5.59 1.01l-1.87 3.31l-2.99.31L5 18H2l-1-2l7.95-7.69c-.92-1.87-.62-4.18.93-5.73a4.985 4.985 0 0 1 7.07 0zm-2.51 3.79c.74 0 1.33-.6 1.33-1.34a1.33 1.33 0 1 0-2.66 0c0 .74.6 1.34 1.33 1.34z"/></svg>
+          <button onclick="window.location.href=`/products/manage/${currentUserid}`">Режим Админа</button>
+        </div>
+        <div class="cart-wrapper btn" id="logout-button">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z" fill="white"/>
+          </svg>
+          <button>Выйти</button>
+        </div>
+      </div>
+    </header>
+    <script>
+      
+      const logoutButton = document.querySelector('#logout-button');
+      const currentUserid = localStorage.getItem('currentUserid');
+
+      if (currentUserid == null) {
+        window.location.href = '/login';
+      }
+
+      logoutButton.addEventListener('click', () => {
+        localStorage.removeItem('currentUserid');
+        window.location.href = '/login';
+      });
+
+    </script>
+  </body>
+</html>

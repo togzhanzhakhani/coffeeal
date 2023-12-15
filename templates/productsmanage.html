@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Список товаров</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">  
+    <style>
+        body {
+            background-color: #e1c5ad;
+        }
+
+        h1, h2, label, p {
+            color: #45291c;
+        }
+
+        h2 {
+            text-align: center;
+        }
+        #add {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>  
+</head>
+<body>
+    <h2>Add Product</h2>
+    <form method="POST" action="" id="add">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name"><br>
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description"><br>
+      <label for="price">Price:</label>
+      <input type="number" id="price" name="price"><br>
+      <label for="image_url">ImageURL:</label>
+      <input type="text" id="image_url" name="image_url"><br>
+      <input type="submit" value="Add Product">
+    </form>
+	<h1>Список товаров</h1>
+	<table class="table">
+		<tr>
+			<th>ID</th>
+			<th>Название</th>
+			<th>Описание</th>
+			<th>Цена</th>
+			<th>Изображение</th>
+            <th>Действия</th>
+		</tr>
+		{{range .Products}}
+        <tr>
+            <td>{{.ID}}</td>
+            <td><a id="edit-link" href="/products/manage/{{$.UserID}}/{{.ID}}">{{ .Name }}</a></td>
+            <td>{{.Description}}</td>
+            <td>{{.Price}}</td>
+            <td><img src="{{.ImageURL}}" alt="{{.Name}}" width="100"></td>
+            <td>
+                <button onclick="confirmDelete('{{$.UserID}}', '{{.ID}}')">Delete</button>
+            </td>
+        </tr>
+        {{end}}
+	</table>
+    <script>
+		const currentUserid = localStorage.getItem('currentUserid');
+
+        const addform = document.querySelector('#add');
+  
+		if (currentUserid == null) {
+		  window.location.href = '/login';
+		}
+  
+        function confirmDelete(userID, productID) {
+			if (confirm("Are you sure you want to delete your profile?")) {
+				fetch(`/products/manage/${userID}/${productID}`, { method: "DELETE" })
+                .then(() => window.location.href = `/products/manage/${currentUserid}`)
+                .catch(error => console.error("Error deleting product:", error))
+			}
+		}
+        addform.action = `/products/manage/${currentUserid}`;
+	  </script>
+</body>
+</html>
